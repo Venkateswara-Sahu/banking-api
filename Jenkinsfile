@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/your-username/banking-api.git'
+                git 'https://github.com/Venkateswara-Sahu/banking-api.git'
             }
         }
 
