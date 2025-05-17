@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  banking-api:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+    command: python app.py
+
+  test-runner:
+    build:
+      context: .
+    depends_on:
+      - banking-api
+    command: >
+      sh -c "sleep 5 &&
+             pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short"
