@@ -26,12 +26,11 @@ pipeline {
     }
 
     stage('Run Pytest') {
-      steps {
-        bat 'pip install -r requirements.txt'
-        bat 'pip install pytest'
-        bat 'pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short'
-      }
-    }
+  steps {
+    bat 'docker-compose exec -T banking_api pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short'
+  }
+}
+
   }
 
   post {
