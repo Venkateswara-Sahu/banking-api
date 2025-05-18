@@ -26,7 +26,7 @@ pipeline {
           def timeout = 120 // seconds
           def startTime = System.currentTimeMillis()
           while (System.currentTimeMillis() - startTime < timeout * 1000) {
-            def result = sh(
+            def result = bat(
               script: "docker inspect --format='{{.State.Health.Status}}' banking_api",
               returnStatus: true
             ).trim()
@@ -37,7 +37,7 @@ pipeline {
             echo "Waiting for banking-api container to become healthy (current status: ${result})..."
             sleep time: 5, unit: 'SECONDS'
           }
-          if (sh(script: "docker inspect --format='{{.State.Health.Status}}' banking_api", returnStatus: true).trim() != "healthy") {
+          if (bat(script: "docker inspect --format='{{.State.Health.Status}}' banking_api", returnStatus: true).trim() != "healthy") {
             error "banking-api container did not become healthy within ${timeout} seconds"
           }
         }
