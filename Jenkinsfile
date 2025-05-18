@@ -31,7 +31,7 @@ pipeline {
             steps {
                 bat '''
                 docker-compose up -d
-                ping -n 20 127.0.0.1 >nul
+                ping -n 30 127.0.0.1 >nul
                 curl -f http://localhost:5000/health || exit /b 1
                 '''
             }
@@ -49,7 +49,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                    docker.withRegistry('https://hub.docker.com/repositories/riverstead', 'docker-hub-credentials') {
                         docker.image('banking-api:latest').push()
                     }
                 }
