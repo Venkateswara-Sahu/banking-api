@@ -22,7 +22,7 @@ EXPOSE 5000
 #CMD ["python", "app/main.py"]
 
 # Option 2: If using Flask or direct Python
-CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=5000", "--app=app.main"]
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=5000"]
 
 # Option 3: If you have a custom run command in main.py
 # Make sure main.py binds to 0.0.0.0:5000, then:
