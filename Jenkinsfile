@@ -8,9 +8,14 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Cloning') {
             steps {
-                git 'https://github.com/Venkateswara-Sahu/banking-api.git' // Replace with actual repo URL
+                bat '''
+                if exist banking-api (
+                    rmdir /s /q banking-api
+                )
+                git clone https://github.com/Venkateswara-Sahu/banking-api.git
+                '''
             }
         }
 
@@ -31,7 +36,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://hub.docker.com/repositories/riverstead', 'docker-hub-credentials') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
                         docker.image('banking-api:latest').push()
                     }
                 }
