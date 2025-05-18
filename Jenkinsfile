@@ -32,7 +32,7 @@ pipeline {
 
                     while (System.currentTimeMillis() - startTime < timeout * 1000) {
                         def responseCode = bat(
-                            script: 'curl -s -o nul -w "%{http_code}" http://localhost:5000/health',
+                            script: "curl -s -o nul -w \"%{http_code}\" http://localhost:5000/health",
                             returnStdout: true
                         ).trim()
 
