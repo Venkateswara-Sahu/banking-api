@@ -43,13 +43,21 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub') {
-                    docker.image('banking-api:latest').push()
-                    }
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        bat """
+                        echo Logging in to Docker Hub...
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
 
+                        echo Tagging the image...
+                        docker tag banking-api:latest %DOCKER_USER%/banking-api:latest
+
+                        echo Pushing the image to Docker Hub...
+                        docker push %DOCKER_USER%/banking-api:latest
+                        """
+                    }
                 }
             }
         }
