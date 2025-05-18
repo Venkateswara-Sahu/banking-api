@@ -56,7 +56,7 @@ pipeline {
 
         stage('Run Pytest') {
             steps {
-                bat 'docker-compose run --rm banking-api pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short || echo "Tests failed"'
+                bat 'docker-compose exec banking-api pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short || echo "Tests failed"'
             }
         }
     }
