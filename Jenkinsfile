@@ -39,7 +39,7 @@ pipeline {
 
         stage('Run Unit Tests') {
             steps {
-                bat 'docker-compose exec banking_api pytest -v tests/'
+                bat 'docker exec banking_api pytest -v tests/'
             }
         }
 
