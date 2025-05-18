@@ -21,7 +21,7 @@ pipeline {
     stage('Run Docker Container') {
       steps {
         bat 'docker-compose up -d'
-        bat 'timeout /t 10' // Wait a bit for the container to be ready
+        bat 'ping -n 10 127.0.0.1 >nul' // For Windows
       }
     }
 
