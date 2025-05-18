@@ -31,7 +31,8 @@ pipeline {
             steps {
                 bat '''
                 docker-compose up -d
-                timeout 20
+                ping -n 20 127.0.0.1 >nul
+                curl -f http://localhost:5000/health || exit /b 1
                 '''
             }
         }
