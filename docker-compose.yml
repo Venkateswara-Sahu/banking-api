@@ -1,5 +1,4 @@
-version: '3.9'
-
+# Remove version as it's obsolete in newer Docker Compose
 services:
   banking-api:
     build:
@@ -8,7 +7,11 @@ services:
       - "5000:5000"
     container_name: banking_api
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      # Option 1: Use wget instead of curl (available in slim images)
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/health"]
+      # Option 2: Alternative using python
+      # test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
