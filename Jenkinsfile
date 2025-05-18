@@ -14,19 +14,22 @@ pipeline {
 
         stage('Clean Up Previous Containers') {
             steps {
-                bat 'docker ps -q --filter "name=banking_api" | for /F "delims=" %%i in (\'more\') do docker stop %%i || echo "No active container found"'
-                bat 'docker ps -aq --filter "name=banking_api" | for /F "delims=" %%i in (\'more\') do docker rm %%i || echo "No containers to remove"'
+                echo "Stopping and removing old containers if they exist..."
+                bat 'docker stop banking_api 2> nul || echo "No active container to stop"'
+                bat 'docker rm banking_api 2> nul || echo "No container to remove"'
             }
         }
 
         stage('Build Docker Image') {
             steps {
+                echo "Building a fresh Docker image..."
                 bat 'docker build -t banking-api .'
             }
         }
 
         stage('Run Docker Container') {
             steps {
+                echo "Starting the Flask container..."
                 bat 'docker run -d --name banking_api -p 5000:5000 banking-api'
 
                 script {
@@ -62,7 +65,8 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'docker run --rm banking-api pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short || echo "Tests failed"'
+                echo "Executing Pytest inside the container..."
+                bat 'docker exec banking_api pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short || echo "Tests failed"'
             }
         }
     }
@@ -70,8 +74,8 @@ pipeline {
     post {
         always {
             echo 'Cleaning up containers...'
-            bat 'docker stop banking_api || echo "No active container to stop"'
-            bat 'docker rm banking_api || echo "No container to remove"'
+            bat 'docker stop banking_api 2> nul || echo "No active container to stop"'
+            bat 'docker rm banking_api 2> nul || echo "No container to remove"'
         }
     }
 }
