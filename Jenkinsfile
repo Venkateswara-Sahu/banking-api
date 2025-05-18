@@ -15,8 +15,12 @@ pipeline {
         stage('Clean Up Previous Containers') {
             steps {
                 echo "Stopping and removing old containers if they exist..."
-                bat 'docker stop banking_api 2> nul || echo "No active container to stop"'
-                bat 'docker rm banking_api 2> nul || echo "No container to remove"'
+                bat '''
+                docker ps -q --filter "name=banking_api" > tmp.txt
+                for /F "delims=" %%i in (tmp.txt) do docker stop %%i 2>nul
+                for /F "delims=" %%i in (tmp.txt) do docker rm %%i 2>nul
+                del tmp.txt
+                '''
             }
         }
 
@@ -74,8 +78,12 @@ pipeline {
     post {
         always {
             echo 'Cleaning up containers...'
-            bat 'docker stop banking_api 2> nul || echo "No active container to stop"'
-            bat 'docker rm banking_api 2> nul || echo "No container to remove"'
+            bat '''
+            docker ps -q --filter "name=banking_api" > tmp.txt
+            for /F "delims=" %%i in (tmp.txt) do docker stop %%i 2>nul
+            for /F "delims=" %%i in (tmp.txt) do docker rm %%i 2>nul
+            del tmp.txt
+            '''
         }
     }
 }
