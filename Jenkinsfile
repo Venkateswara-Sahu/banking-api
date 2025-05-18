@@ -46,9 +46,10 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://hub.docker.com/repositories/riverstead', 'docker-hub-credentials') {
-                        docker.image('banking-api:latest').push()
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                    docker.image('banking-api:latest').push()
                     }
+
                 }
             }
         }
