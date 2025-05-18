@@ -28,18 +28,18 @@ pipeline {
                     def startTime = System.currentTimeMillis()
                     def isHealthy = false
 
-                    echo "Waiting for Flask service to respond..."
+                    echo "Waiting for Flask container to stabilize..."
 
                     while (System.currentTimeMillis() - startTime < timeout * 1000) {
-                        def responseCode = bat(
-                            script: "curl -s -o nul -w \"%{http_code}\" http://localhost:5000/health",
+                        def containerStatus = bat(
+                            script: "docker inspect --format='{{.State.Status}}' banking_api",
                             returnStdout: true
                         ).trim()
 
-                        echo "HTTP Response Code: ${responseCode}"
+                        echo "Container status: ${containerStatus}"
 
-                        if (responseCode == '200') {
-                            echo "Flask service is live!"
+                        if (containerStatus == 'running') {
+                            echo "Flask container is running!"
                             isHealthy = true
                             break
                         }
@@ -48,7 +48,7 @@ pipeline {
                     }
 
                     if (!isHealthy) {
-                        error "Flask service did not start properly within ${timeout} seconds."
+                        error "Flask container did not become stable within ${timeout} seconds."
                     }
                 }
             }
