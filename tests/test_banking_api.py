@@ -1,6 +1,6 @@
 import requests
 
-BASE_URL = "http://localhost:5000"
+BASE_URL = "http://localhost:5000/api"
 
 def test_get_balance():
     response = requests.get(f"{BASE_URL}/balance")

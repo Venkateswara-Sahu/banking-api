@@ -3,7 +3,8 @@ from app.routes.banking import banking_bp
 
 app = Flask(__name__)
 
-app.register_blueprint(banking_bp)
+# ✅ Register blueprint with /api prefix
+app.register_blueprint(banking_bp, url_prefix="/api")
 
 @app.route("/health", methods=["GET"])
 def health_check():
