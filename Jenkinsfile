@@ -25,20 +25,33 @@ pipeline {
         script {
           def timeout = 120 // seconds
           def startTime = System.currentTimeMillis()
+          def isHealthy = false
+
           while (System.currentTimeMillis() - startTime < timeout * 1000) {
-            def result = bat(
+            def healthStatus = bat(
               script: "docker inspect --format='{{.State.Health.Status}}' banking_api",
-              returnStatus: true
+              returnStdout: true
             ).trim()
-            if (result == "healthy") {
+
+            echo "Current health status: ${healthStatus}"
+
+            if (healthStatus == "healthy") {
               echo "banking-api container is healthy!"
+              isHealthy = true
               break
             }
-            echo "Waiting for banking-api container to become healthy (current status: ${result})..."
+
+            echo "Waiting for banking-api container to become healthy..."
             sleep time: 5, unit: 'SECONDS'
           }
-          if (bat(script: "docker inspect --format='{{.State.Health.Status}}' banking_api", returnStatus: true).trim() != "healthy") {
-            error "banking-api container did not become healthy within ${timeout} seconds"
+
+          if (!isHealthy) {
+            // Get final health status for error message
+            def finalStatus = bat(
+              script: "docker inspect --format='{{.State.Health.Status}}' banking_api",
+              returnStdout: true
+            ).trim()
+            error "banking-api container did not become healthy within ${timeout} seconds. Final status: ${finalStatus}"
           }
         }
       }
@@ -46,7 +59,7 @@ pipeline {
 
     stage('Run Pytest') {
       steps {
-        bat 'docker-compose exec -T banking_api pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short'
+        bat 'docker-compose exec -T banking-api pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short'
       }
     }
   }
