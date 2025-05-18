@@ -27,6 +27,10 @@ pipeline {
           def startTime = System.currentTimeMillis()
           def isHealthy = false
 
+          // Add debugging information
+          echo "Checking container logs..."
+          bat 'docker logs banking-api || echo "No logs available"'
+
           while (System.currentTimeMillis() - startTime < timeout * 1000) {
             def healthStatus = bat(
               script: "docker inspect --format='{{.State.Health.Status}}' banking_api",
@@ -34,6 +38,16 @@ pipeline {
             ).trim()
 
             echo "Current health status: ${healthStatus}"
+
+            // Check if container is running
+            def containerStatus = bat(
+              script: "docker inspect --format='{{.State.Status}}' banking_api",
+              returnStdout: true
+            ).trim()
+            echo "Container status: ${containerStatus}"
+
+            // Show recent logs
+            bat 'docker logs --tail=10 banking-api || echo "Cannot fetch logs"'
 
             if (healthStatus == "healthy") {
               echo "banking-api container is healthy!"
