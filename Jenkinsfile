@@ -2,88 +2,61 @@ pipeline {
     agent any
 
     environment {
-        COMPOSE_PROJECT_NAME = "banking_api"
+        FLASK_APP = "app.main"
+        FLASK_RUN_HOST = "0.0.0.0"
+        FLASK_RUN_PORT = "5000"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
-            }
-        }
-
-        stage('Clean Up Previous Containers') {
-            steps {
-                echo "Stopping and removing old containers if they exist..."
-                bat '''
-                docker ps -q --filter "name=banking_api" > tmp.txt
-                for /F "delims=" %%i in (tmp.txt) do docker stop %%i 2>nul
-                for /F "delims=" %%i in (tmp.txt) do docker rm %%i 2>nul
-                del tmp.txt
-                '''
+                git 'https://github.com/Venkateswara-Sahu/banking-api.git' // Replace with actual repo URL
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo "Building a fresh Docker image..."
-                bat 'docker build -t banking-api .'
+                script {
+                    docker.build('banking-api:latest')
+                }
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Run Unit Tests') {
             steps {
-                echo "Starting the Flask container..."
-                bat 'docker run -d --name banking_api -p 5000:5000 banking-api'
+                bat 'docker run --rm banking-api pytest'
+            }
+        }
 
+        stage('Push Docker Image') {
+            steps {
                 script {
-                    def timeout = 120
-                    def startTime = System.currentTimeMillis()
-                    def isReady = false
-
-                    echo "Checking container status..."
-
-                    while (System.currentTimeMillis() - startTime < timeout * 1000) {
-                        def status = bat(
-                            script: "docker inspect --format='{{.State.Status}}' banking_api",
-                            returnStdout: true
-                        ).trim()
-
-                        echo "Current status: ${status}"
-
-                        if (status == 'running') {
-                            echo "Container is running successfully!"
-                            isReady = true
-                            break
-                        }
-
-                        sleep time: 5, unit: 'SECONDS'
-                    }
-
-                    if (!isReady) {
-                        error "Container did not start properly within ${timeout} seconds."
+                    docker.withRegistry('https://hub.docker.com/repositories/riverstead', 'docker-hub-credentials') {
+                        docker.image('banking-api:latest').push()
                     }
                 }
             }
         }
 
-        stage('Run Tests') {
+        stage('Deploy') {
             steps {
-                echo "Executing Pytest inside the container..."
-                bat 'docker exec banking_api pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short || echo "Tests failed"'
+                bat 'docker-compose up -d'
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                bat 'curl -f http://localhost:5000/health || exit /b 1'
             }
         }
     }
 
     post {
-        always {
-            echo 'Cleaning up containers...'
-            bat '''
-            docker ps -q --filter "name=banking_api" > tmp.txt
-            for /F "delims=" %%i in (tmp.txt) do docker stop %%i 2>nul
-            for /F "delims=" %%i in (tmp.txt) do docker rm %%i 2>nul
-            del tmp.txt
-            '''
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
         }
     }
 }
