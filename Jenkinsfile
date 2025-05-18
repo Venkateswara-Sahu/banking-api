@@ -27,9 +27,21 @@ pipeline {
             }
         }
 
+        stage('Start Flask API') {
+            steps {
+                bat '''
+                docker-compose up -d
+                timeout 20
+                '''
+            }
+        }
+
         stage('Run Unit Tests') {
             steps {
-                bat 'docker run --rm banking-api pytest -v /app/banking-api/tests'
+                bat '''
+                timeout 10
+                docker run --rm banking-api pytest -v /app/banking-api/tests
+                '''
             }
         }
 
