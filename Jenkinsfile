@@ -1,44 +1,43 @@
 pipeline {
-    agent any
+  agent any
 
-    environment {
-        COMPOSE_PROJECT_NAME = 'banking_api_project'
+  environment {
+    COMPOSE_PROJECT_NAME = "banking_api"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
     }
 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Venkateswara-Sahu/banking-api.git'
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker-compose build'
-            }
-        }
-
-        stage('Run Docker Container') {
-            steps {
-                sh 'docker-compose up -d'
-                // Wait for health check to pass
-                sh 'sleep 20'
-            }
-        }
-
-        stage('Run Pytest') {
-            steps {
-                sh 'pip install -r requirements.txt'
-                sh 'pip install pytest requests'
-                sh 'pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short'
-            }
-        }
+    stage('Build Docker Image') {
+      steps {
+        bat 'docker build -t banking-api .'
+      }
     }
 
-    post {
-        always {
-            echo 'Cleaning up containers...'
-            sh 'docker-compose down'
-        }
+    stage('Run Docker Container') {
+      steps {
+        bat 'docker-compose up -d'
+        bat 'timeout /t 10' // Wait a bit for the container to be ready
+      }
     }
+
+    stage('Run Pytest') {
+      steps {
+        bat 'pip install -r requirements.txt'
+        bat 'pip install pytest'
+        bat 'pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short'
+      }
+    }
+  }
+
+  post {
+    always {
+      echo 'Cleaning up containers...'
+      bat 'docker-compose down || echo Container not found'
+    }
+  }
 }
