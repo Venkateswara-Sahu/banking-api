@@ -1,6 +1,6 @@
 import requests
 
-BASE_URL = "http://banking_api:5000"
+BASE_URL = "http://172.19.0.2:5000"
 
 def test_get_balance():
     response = requests.get(f"{BASE_URL}/balance")
