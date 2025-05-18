@@ -19,10 +19,10 @@ EXPOSE 5000
 
 # Run the application with proper host binding
 # Option 1: If using uvicorn (FastAPI)
-CMD ["python", "app/main.py"]
+#CMD ["python", "app/main.py"]
 
 # Option 2: If using Flask or direct Python
-# CMD ["python", "-c", "from main import app; app.run(host='0.0.0.0', port=5000)"]
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=5000"]
 
 # Option 3: If you have a custom run command in main.py
 # Make sure main.py binds to 0.0.0.0:5000, then:

@@ -1,11 +1,10 @@
 services:
   banking-api:
-    build:
-      context: .
+    build: .
     ports:
       - "5000:5000"
     container_name: banking_api
-    command: ["python", "app/main.py"]
+    command: ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=5000"]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
