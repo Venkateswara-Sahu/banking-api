@@ -1,6 +1,15 @@
-from app import create_app
+# main.py
+from fastapi import FastAPI
+from app.routes import banking
 
-app = create_app()
+app = FastAPI()
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
+app.include_router(banking.router)
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=5000)
