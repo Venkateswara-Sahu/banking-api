@@ -2,5 +2,3 @@ Flask
 pytest
 requests
 flask-cors
-fastapi
-uvicorn

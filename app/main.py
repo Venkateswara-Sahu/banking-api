@@ -1,5 +1,5 @@
 from flask import Flask
-from app.routes.banking import banking_bp
+from routes.banking import banking_bp
 
 app = Flask(__name__)
 
