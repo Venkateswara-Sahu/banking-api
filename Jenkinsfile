@@ -29,7 +29,7 @@ pipeline {
 
         stage('Run Unit Tests') {
             steps {
-                bat 'docker run --rm banking-api pytest'
+                bat 'docker run --rm banking-api pytest -v /app/banking-api/tests'
             }
         }
 
