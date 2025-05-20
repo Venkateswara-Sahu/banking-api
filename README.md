@@ -103,13 +103,19 @@ Postman (for manual API testing)
 💼 Why This Project?
 
 This project demonstrates real-world backend testing workflows, built for demonstrating:
+
 🔍 API automation skills
+
 ⚙️ CI/CD integration
+
 🧪 Test coverage with assertions and edge cases
+
 🐳 Docker containerization & debugging
+
 🧠 SDET mindset: testing from a developer’s lens
 
 📧 Author
+
 Venkateswara Sahu
 B.Tech CSE, Class of 2026
 GitHub Profile
