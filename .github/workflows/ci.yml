@@ -22,18 +22,20 @@ jobs:
     - name: Build Docker image
       run: docker build -t banking-api .
 
-    - name: Start Docker container
+    - name: Run Docker container
       run: docker run -d -p 5000:5000 --name banking_api banking-api
 
-    - name: Wait for container to be healthy
+    - name: Wait for API to be healthy
       run: |
-        for i in {1..10}; do
-          if curl --fail http://localhost:5000/health; then
-            echo "API is healthy!"
+        echo "Waiting for API to be healthy..."
+        for i in {1..20}; do
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/health)
+          if [ "$STATUS" -eq 200 ]; then
+            echo "✅ API is up!"
             break
           fi
-          echo "Waiting for API to be healthy..."
-          sleep 5
+          echo "⏳ Waiting... (attempt $i)"
+          sleep 3
         done
 
     - name: Install test dependencies
@@ -44,6 +46,6 @@ jobs:
       run: |
         pytest tests/test_banking_api.py --maxfail=1 --disable-warnings --tb=short
 
-    - name: Cleanup
+    - name: Cleanup Docker
       if: always()
       run: docker rm -f banking_api || true
