@@ -30,11 +30,11 @@ Built using **Flask**, **Pytest**, **Docker**, and **Jenkins**, this project dem
 
 ---
 
-## 🐳 Docker Setup
+### 🐳 Docker Setup
 
 ---
 
-### 📁 Project Structure
+## 📁 Project Structure
 
 .
 ├── app/
@@ -52,7 +52,7 @@ Built using **Flask**, **Pytest**, **Docker**, and **Jenkins**, this project dem
 
 ---
 
-### 🛠️ Build & Run
+## 🛠️ Build & Run
 
  - in bash
 #### Build Docker image
@@ -66,7 +66,7 @@ docker exec -it banking_api pytest -v tests/
 
 ---
 
-### ⚙️ Jenkins CI/CD Integration
+## ⚙️ Jenkins CI/CD Integration
 
 - ✅ Pulls latest code from GitHub
 
@@ -82,7 +82,7 @@ Jenkinsfile is located in root and fully declarative.
 
 ---
 
-### 📂 API Sample (via Postman / curl)
+## 📂 API Sample (via Postman / curl)
 
 #### Health check
 curl http://localhost:5000/health
@@ -92,7 +92,7 @@ curl -X POST http://localhost:5000/api/deposit -H "Content-Type: application/jso
 
 ---
 
-### 📄 Technologies Used
+## 📄 Technologies Used
 
 - Python 3.11
 
