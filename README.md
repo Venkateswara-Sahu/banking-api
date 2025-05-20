@@ -1,61 +1,121 @@
-# 🚀 Banking API Automation Framework  
+# 🏦 Banking API - Test Automation Suite
 
-_Automated API testing framework for validating banking services_
+A full-stack **API Test Automation Project** for a mock banking system, developed as part of an SDET internship preparation for **CRED**.
 
-## 📌 **Project Overview**  
-This project automates the testing of banking APIs using **Pytest**, **Postman**, and **Jenkins CI/CD**. It ensures robust validation of API endpoints, covering authentication, transaction processing, and account operations.  
+Built using **Flask**, **Pytest**, **Docker**, and **Jenkins**, this project demonstrates backend development, RESTful API automation, CI/CD integration, and containerized testing workflows.
 
-## ⚡ **Key Features**  
-✅ Automated API testing using **Pytest**  
-✅ CI/CD integration with **Jenkins** for continuous validation  
-✅ API test execution with **Postman**  
-✅ Dockerized test framework for consistency  
-✅ Logs and debugging insights for improved error detection  
+---
 
-## 🛠 **Tech Stack**  
-- **Python** (Flask for API development)  
-- **Postman** (API validation)  
-- **Pytest** (Automated testing)  
-- **Jenkins** (CI/CD integration)  
-- **Docker** (Containerized testing)  
+## 📌 Features
 
-## 📂 **Project Structure**  
-```plaintext
-📁 banking-api-automation
- ├── 📁 tests
- │   ├── test_auth.py
- │   ├── test_transactions.py
- │   ├── test_accounts.py
- ├── Dockerfile
- ├── requirements.txt
- ├── Jenkinsfile
- ├── README.md
-```
+### ✅ Core API Endpoints
+| Method | Endpoint            | Description                      |
+|--------|---------------------|----------------------------------|
+| GET    | `/api/balance`      | Retrieve current balance         |
+| POST   | `/api/deposit`      | Deposit funds                    |
+| POST   | `/api/withdraw`     | Withdraw funds                   |
+| POST   | `/api/accounts`     | Create a new account             |
+| GET    | `/health`           | Health check of the API          |
 
-## 🚀 **Setup & Installation**  
-1️⃣ Clone the repository:  
-```bash
-git clone https://github.com/yourusername/banking-api-automation.git
-```
-2️⃣ Install dependencies:  
-```bash
-pip install -r requirements.txt
-```
-3️⃣ Run API tests:  
-```bash
-pytest tests/
-```
-4️⃣ Start Jenkins for CI/CD:  
-```bash
-docker-compose up -d jenkins
-```
+---
 
-## 🔥 **How It Works**  
-- **Postman tests API endpoints manually & runs automation scripts**  
-- **Pytest executes automated API tests**  
-- **Jenkins integrates testing into CI/CD pipelines**  
-- **Docker ensures reproducibility across environments**  
+## 🧪 Test Automation
 
-## 🤝 **Contributing**  
-Have ideas to improve the framework? Contributions are welcome! Fork the repo and submit a pull request.
+- Written using `pytest` + `requests`
+- Covers:
+  - ✅ Valid and invalid deposits
+  - ✅ Valid and edge-case withdrawals
+  - ✅ Balance retrieval
+  - ✅ Error handling for invalid inputs
 
+---
+
+## 🐳 Docker Setup
+
+### 📁 Project Structure
+
+.
+├── app/
+│ ├── init.py
+│ └── routes/
+│ ├── init.py
+│ └── banking.py # Main API logic
+├── tests/
+│ └── test_banking_api.py # All automated test cases
+├── main.py # Flask entrypoint
+├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+├── Jenkinsfile
+
+---
+
+### 🛠️ Build & Run
+
+ in bash
+# Build Docker image
+docker-compose build
+
+# Start Flask app
+docker-compose up -d
+
+# Run tests inside container
+docker exec -it banking_api pytest -v tests/
+
+### ⚙️ Jenkins CI/CD Integration
+
+✅ Pulls latest code from GitHub
+
+✅ Builds the Docker image
+
+✅ Runs pytest inside the container
+
+✅ Health-check validation via curl
+
+✅ Cleans up Docker on failure
+
+Jenkinsfile is located in root and fully declarative.
+
+### 📂 API Sample (via Postman / curl)
+
+# Health check
+curl http://localhost:5000/health
+
+# Deposit funds
+curl -X POST http://localhost:5000/api/deposit -H "Content-Type: application/json" -d '{"amount": 1000}'
+
+### 📄 Technologies Used
+
+Python 3.11
+
+Flask
+
+Pytest & Requests
+
+Docker & Docker Compose
+
+Jenkins
+
+GitHub Actions (Optional CI)
+
+Postman (for manual API testing)
+
+💼 Why This Project?
+This project demonstrates real-world backend testing workflows, built for demonstrating:
+
+🔍 API automation skills
+
+⚙️ CI/CD integration
+
+🧪 Test coverage with assertions and edge cases
+
+🐳 Docker containerization & debugging
+
+🧠 SDET mindset: testing from a developer’s lens
+
+📧 Author
+Venkateswara Sahu
+B.Tech CSE, Class of 2026
+GitHub Profile
+
+---
