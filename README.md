@@ -53,13 +53,13 @@ Built using **Flask**, **Pytest**, **Docker**, and **Jenkins**, this project dem
 ### 🛠️ Build & Run
 
  in bash
-# Build Docker image
+#### Build Docker image
 docker-compose build
 
-# Start Flask app
+#### Start Flask app
 docker-compose up -d
 
-# Run tests inside container
+#### Run tests inside container
 docker exec -it banking_api pytest -v tests/
 
 ### ⚙️ Jenkins CI/CD Integration
@@ -78,10 +78,10 @@ Jenkinsfile is located in root and fully declarative.
 
 ### 📂 API Sample (via Postman / curl)
 
-# Health check
+#### Health check
 curl http://localhost:5000/health
 
-# Deposit funds
+#### Deposit funds
 curl -X POST http://localhost:5000/api/deposit -H "Content-Type: application/json" -d '{"amount": 1000}'
 
 ### 📄 Technologies Used
@@ -101,16 +101,12 @@ GitHub Actions (Optional CI)
 Postman (for manual API testing)
 
 💼 Why This Project?
+
 This project demonstrates real-world backend testing workflows, built for demonstrating:
-
 🔍 API automation skills
-
 ⚙️ CI/CD integration
-
 🧪 Test coverage with assertions and edge cases
-
 🐳 Docker containerization & debugging
-
 🧠 SDET mindset: testing from a developer’s lens
 
 📧 Author
