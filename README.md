@@ -1,7 +1,5 @@
 # 🏦 Banking API - Test Automation Suite
 
-A full-stack **API Test Automation Project** for a mock banking system, developed as part of an SDET internship preparation for **CRED**.
-
 Built using **Flask**, **Pytest**, **Docker**, and **Jenkins**, this project demonstrates backend development, RESTful API automation, CI/CD integration, and containerized testing workflows.
 
 ---
